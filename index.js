@@ -1,5 +1,6 @@
 const http = require("http");
 const fs = require("fs");
+const { RSA_NO_PADDING } = require("constants");
 
 const getTimestamp = date => ({
     unix: date.getTime(),
@@ -36,6 +37,13 @@ const getTimestamp = date => ({
   
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(timestamp));
+    } else if (req.url.startsWith("/admin")) {
+      fs.readFile("views/403.html", (err, html) => {
+        if (err) throw err;
+
+        res.writeHead(403, {"Content-Type": "text/html"});
+        res.end(html);
+      });
     } else {
       fs.readFile("views/404.html", (err, html) => {
         if (err) throw err;
